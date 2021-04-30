@@ -6,6 +6,69 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
+// tape and head
+int tape[30000] = {0};
+int * head = &tape[0];
+
+void parse(char c)
+{
+    switch(c)
+    {
+        case '+':
+            ++*head;
+            break;
+        case '-':
+            --*head;
+            break;
+        case '>':
+            ++head;
+            break;
+        case '<':
+            --head;
+            break;
+        case ',':
+            scanf("%d", head);
+            break;
+        case '.':
+            printf("%d", *head);
+            break;
+        default:
+            // skip any other char
+            break;
+    }
+}
+
+void interpret(char * source, int start, int end)
+{
+    for (int i = start; i < end; i++)
+    {
+        int loop_start;
+        int loop_end;
+        switch(source[i])
+        {
+            case '[':
+                loop_start = i + 1;
+                for (int j = loop_start; j < end; j++)
+                {
+                    if (source[j] == ']')
+                    {
+                        loop_end = j - 1;
+                        break;
+                    }
+                }
+                while (*head)
+                {
+                    interpret(source, loop_start, loop_end);
+                }
+                i = loop_end + 1;
+                break;
+            default:
+                parse(source[i]);
+                break;
+        }
+    }
+}
+
 int main(int argc, char ** argv)
 {
     // usage
@@ -15,15 +78,12 @@ int main(int argc, char ** argv)
         return 1;
     }
 
-    // tape and head
-    int tape[30000] = {0};
-    int * head = &tape[0];
-
     // open file
     FILE * file = fopen(argv[1], "r");
     if (!file)
     {
         printf("Can't open %s for reading\n", argv[1]);
+        return 1;
     }
 
     // get file size
@@ -38,38 +98,7 @@ int main(int argc, char ** argv)
     char source[file_size];
     fread(source, 1, file_size, file);
 
-    // parse source char by char
-    for (int i = 0; i < file_size; i++)
-    {
-        printf("%c", source[i]);
-        switch(source[i])
-        {
-            case '+':
-                ++*head;
-                break;
-            case '-':
-                --*head;
-                break;
-            case '>':
-                ++head;
-                break;
-            case '<':
-                --head;
-                break;
-            case ',':
-                scanf("%d", head);
-                break;
-            case '.':
-                printf("%d", *head);
-                break;
-            case '[':
-                break;
-            case ']':
-                break;
-            default:
-                // skip any other char
-                break;
-        }
-    }
+    // interpret the file
+    interpret(source, 0, file_size);
 }
 
