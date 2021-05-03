@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 
 // tape and head
@@ -75,6 +76,13 @@ int main(int argc, char ** argv)
     if (argc < 2)
     {
         printf("Usage: %s filename\n", argv[0]);
+        return 1;
+    }
+
+    // check that its a .nf file
+    if (strstr(argv[1], ".nf") == NULL)
+    {
+        printf("Not a .nf file\n");
         return 1;
     }
 
