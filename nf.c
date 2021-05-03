@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
@@ -80,34 +81,46 @@ int main(int argc, char ** argv)
         return 1;
     }
 
-    // check that its a .nf file
-    if (strstr(argv[1], ".nf") == NULL)
+    // source
+    int source_length = 0;
+    char * source = malloc(source_length);
+
+    // get expression off command line
+    if (strcmp(argv[1], "-e") == 0)
     {
-        printf("Not a .nf file\n");
-        return 1;
+        source = argv[2];
+        source_length = strlen(source);
+    }
+    else
+    {
+        // check that its a .nf file
+        if (strstr(argv[1], ".nf") == NULL)
+        {
+            printf("Not a .nf file\n");
+            return 1;
+        }
+
+        // open file
+        FILE * file = fopen(argv[1], "r");
+        if (!file)
+        {
+            printf("Can't open %s for reading\n", argv[1]);
+            return 1;
+        }
+
+        // get file size
+        struct stat st;
+        if (stat(argv[1], &st) == 0)
+        {
+            source_length = st.st_size;
+        }
+
+        // read in file
+        source = realloc(source, sizeof(char *) * source_length);
+        fread(source, 1, source_length, file);
     }
 
-    // open file
-    FILE * file = fopen(argv[1], "r");
-    if (!file)
-    {
-        printf("Can't open %s for reading\n", argv[1]);
-        return 1;
-    }
-
-    // get file size
-    struct stat st;
-    int file_size = 0;
-    if (stat(argv[1], &st) == 0)
-    {
-        file_size = st.st_size;
-    }
-
-    // read in file
-    char source[file_size];
-    fread(source, 1, file_size, file);
-
-    // interpret the file
-    interpret(source, 0, file_size);
+    // interpret the source
+    interpret(source, 0, source_length);
 }
 
