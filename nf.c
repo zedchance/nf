@@ -29,6 +29,7 @@ void parse(char c)
             break;
         case ',':
             scanf("%d", head);
+            fflush(stdin);
             break;
         case '.':
             printf("%d", *head);
