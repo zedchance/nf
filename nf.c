@@ -8,9 +8,29 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#define DEBUG
+
 // tape and head
 int tape[30000] = {0};
 int * head = &tape[0];
+
+void print_debug(char * source, int index)
+{
+    fprintf(stderr, " symbol: %c\n", source[index]);
+    fprintf(stderr, "   tape: ");
+    for (int i = 0; i < 10; i++)
+    {
+        fprintf(stderr, "%-3d ", tape[i]);
+    }
+    fprintf(stderr, "\n");
+    fprintf(stderr, "pointer: ");
+    int pad = (head - tape) * 4;
+    for (int i = 0; i < pad; i++)
+    {
+        fprintf(stderr, " ");
+    }
+    fprintf(stderr, "^\n\n");
+}
 
 void parse(char c)
 {
@@ -45,6 +65,10 @@ void interpret(char * source, int start, int end)
 {
     for (int i = start; i < end; i++)
     {
+#ifdef DEBUG
+        print_debug(source, i);
+#endif
+
         int loop_start;
         int loop_end;
         switch(source[i])
