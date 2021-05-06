@@ -77,7 +77,8 @@ int main(int argc, char ** argv)
     // usage
     if (argc < 2)
     {
-        printf("Usage: %s filename\n", argv[0]);
+        printf("Usage: %s filename\n",  argv[0]);
+        printf("       %s -e \'expression\'\n", argv[0]);
         return 1;
     }
 
