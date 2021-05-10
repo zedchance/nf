@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#define DEBUG
+// #define DEBUG
 
 // tape and head
 int tape[30000] = {0};
@@ -20,11 +20,11 @@ void print_debug(char * source, int index)
     fprintf(stderr, "   tape: ");
     for (int i = 0; i < 10; i++)
     {
-        fprintf(stderr, "%-3d ", tape[i]);
+        fprintf(stderr, "%-8d ", tape[i]);
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "pointer: ");
-    int pad = (head - tape) * 4;
+    int pad = (head - tape) * 9;
     for (int i = 0; i < pad; i++)
     {
         fprintf(stderr, " ");
