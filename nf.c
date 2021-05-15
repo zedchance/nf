@@ -68,26 +68,34 @@ void interpret(char * source, int start, int end)
 #ifdef DEBUG
         print_debug(source, i);
 #endif
-
         int loop_start;
         int loop_end;
+        int loop_balance;
         switch(source[i])
         {
             case '[':
+                // find the end of the loop
+                loop_balance = 1;
                 loop_start = i + 1;
                 for (int j = loop_start; j < end; j++)
                 {
-                    if (source[j] == ']')
+                    if (source[j] == '[') loop_balance++;
+                    if (source[j] == ']') loop_balance--;
+                    if (loop_balance == 0)
                     {
-                        loop_end = j - 1;
+                        loop_end = j;
                         break;
                     }
                 }
+
+                // interpret the loop
                 while (*head)
                 {
                     interpret(source, loop_start, loop_end);
                 }
-                i = loop_end + 1;
+
+                // jump to end
+                i = loop_end;
                 break;
             default:
                 parse(source[i]);
