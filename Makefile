@@ -6,11 +6,11 @@ nf: nf.c
 clean:
 	rm nf
 
-test: nf hello.nf
+test: nf hello
 	@echo "Expecting 7"
 	./nf -e '+++ > ++++ < [ >> + << - ] > [ > + < - ] >.'
 	@echo
 	@echo "Expecting 7210110810811132871111141081003310"
-	./nf hello.nf
+	./nf hello
 	@echo
 	./nf -e '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'

@@ -126,13 +126,6 @@ int main(int argc, char ** argv)
     }
     else
     {
-        // check that its a .nf file
-        if (strstr(argv[1], ".nf") == NULL)
-        {
-            printf("Not a .nf file\n");
-            return 1;
-        }
-
         // open file
         FILE * file = fopen(argv[1], "r");
         if (!file)
